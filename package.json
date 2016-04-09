@@ -1,6 +1,6 @@
 {
   "name": "raknet",
-  "version": "1.6.5",
+  "version": "1.6.6",
   "description": "UDP network library that follows the RakNet protocol for Node.js",
   "main": "index.js",
   "scripts": {
@@ -20,6 +20,9 @@
     "lodash.merge": "^4.3.4",
     "protodef": "^1.1.2",
     "split-buffer": "^1.0.0"
+  },
+  "devDependencies": {
+    "mocha": "^2.4.5"
   },
   "directories": {
     "example": "examples"

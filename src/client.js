@@ -1,28 +1,25 @@
 'use strict';
 
 var EventEmitter = require('events').EventEmitter;
-var debug = require('debug')("raknet");
+var debug = require('debug')('raknet');
 
-var createSerializer = require("./transforms/serializer").createSerializer;
-var createDeserializer = require("./transforms/serializer").createDeserializer;
+var createSerializer = require('./transforms/serializer').createSerializer;
+var createDeserializer = require('./transforms/serializer').createDeserializer;
 var ProtoDef = require('protodef').ProtoDef;
 var split = require('split-buffer');
 var Serializer = require('protodef').Serializer;
 var Parser = require('protodef').Parser;
-const merge=require("lodash.merge");
+const merge = require('lodash.merge');
 
-
-class Client extends EventEmitter
-{
-  constructor(port,address,customPackets,customTypes)
-  {
+class Client extends EventEmitter {
+  constructor(port, address, customPackets, customTypes) {
     super();
-    customPackets=customPackets||{};
-    customTypes=customTypes||{};
-    this.address=address;
-    this.port=port;
-    this.parser=createDeserializer(true);
-    this.serializer=createSerializer(true);
+    customPackets = customPackets||{};
+    customTypes = customTypes||{};
+    this.address = address;
+    this.port = port;
+    this.parser = createDeserializer(true);
+    this.serializer = createSerializer(true);
     var proto = new ProtoDef();
     proto.addTypes(require('./datatypes/raknet'));
     proto.addTypes(customTypes);
@@ -38,41 +35,43 @@ class Client extends EventEmitter
     this.setErrorHandling();
   }
 
-  setErrorHandling()
-  {
-    this.serializer.on('error', (e) => {
+  setErrorHandling() {
+    this.serializer.on('error', function(e) {
       let parts;
       if(e.field) {
-        parts = e.field.split(".");
+        parts = e.field.split('.');
         parts.shift();
       }
-      else
-        parts=[];
-      e.field = parts.join(".");
-      e.message = `Serialization error for ${e.field} : ${e.message}`;
-      this.emit('error',e);
+      else {
+        parts = [];
+      }
+
+      e.field = parts.join('.');
+      e.message = `Serialization error for ${e.field}: ${e.message}`;
+      this.emit('error', e);
     });
 
 
-    this.parser.on('error', (e) => {
+    this.parser.on('error', function(e) {
       let parts;
       if(e.field) {
-        parts = e.field.split(".");
+        parts = e.field.split('.');
         parts.shift();
       }
-      else
-        parts=[];
-      e.field = parts.join(".");
-      e.message = `Deserialization error for ${e.field} : ${e.message}`;
-      this.emit('error',e);
+      else {
+        parts = [];
+      }
+
+      e.field = parts.join('.');
+      e.message = `Deserialization error for ${e.field}: ${e.message}`;
+      this.emit('error', e);
     });
   }
 
-  emitPacket(parsed)
-  {
-    parsed.metadata.name=parsed.data.name;
-    parsed.data=parsed.data.params;
-    debug("read packet " + parsed.metadata.name);
+  emitPacket(parsed) {
+    parsed.metadata.name = parsed.data.name;
+    parsed.data = parsed.data.params;
+    debug('read packet ' + parsed.metadata.name);
     debug(JSON.stringify(parsed.data));
     this.emit('packet', parsed.data, parsed.metadata);
     this.emit(parsed.metadata.name, parsed.data, parsed.metadata);
@@ -81,19 +80,17 @@ class Client extends EventEmitter
   }
 
 
-  setSocket(socket)
-  {
-    this.socket=socket;
-    this.serializer.on("data",(chunk) => {
-      socket.send(chunk,0,chunk.length,this.port,this.address);
+  setSocket(socket) {
+    this.socket = socket;
+    this.serializer.on('data', function(chunk) {
+      socket.send(chunk, 0, chunk.length, this.port, this.address);
     });
 
-    this.parser.on("data",(parsed) => {
+    this.parser.on('data', function(parsed) {
       this.emitPacket(parsed);
-      if(parsed.metadata.name.substr(0,11)=="data_packet")
-      {
-        const encapsulatedPackets=parsed.data.encapsulatedPackets;
-        encapsulatedPackets.forEach((encapsulatedPacket) => {
+      if(parsed.metadata.name.substr(0, 11) == 'data_packet') {
+        const encapsulatedPackets = parsed.data.encapsulatedPackets;
+        encapsulatedPackets.forEach(function(encapsulatedPacket) {
           if(encapsulatedPacket.hasSplit) {
             if (!this.splitPackets[encapsulatedPacket.splitID])
               this.splitPackets[encapsulatedPacket.splitID] = [];
@@ -108,31 +105,22 @@ class Client extends EventEmitter
           else
             this.readEncapsulatedPacket(encapsulatedPacket.buffer);
         });
-        this.write("ack",{"packets":[{"one":1,"values":parsed.data.seqNumber}]})
+        this.write('ack', {'packets': [{'one': 1,'values': parsed.data.seqNumber}]})
       }
     });
   }
 
-  readEncapsulatedPacket(buffer)
-  {
+  readEncapsulatedPacket(buffer) {
     try {
-      debug("handle encapsulated",buffer);
+      debug('handle encapsulated', buffer);
       var r = this.encapsulatedPacketParser.parsePacketBuffer(buffer);
       this.emitPacket(r);
     }
     catch(err) {
-      console.log("encapsulated error",err.stack);
-      debug("customPacket",buffer);
-      this.emit("customPacket",buffer);
+      console.log('encapsulated error', err.stack);
+      debug('customPacket', buffer);
+      this.emit('customPacket', buffer);
     }
-  }
-
-  write(name, params) {
-    if(this.ended)
-      return;
-    debug("writing packet " + name);
-    debug(JSON.stringify(params));
-    this.serializer.write({ name, params });
   }
 
   writeEncapsulated(name, params,options) {
@@ -195,9 +183,17 @@ class Client extends EventEmitter
     }
   }
 
-  handleMessage(data)
-  {
-    debug("handle",data);
+  write(name, params) {
+    if(this.ended)
+      return;
+
+    debug("writing packet " + name);
+    debug(JSON.stringify(params));
+    this.serializer.write({ name, params });
+  }
+
+  handleMessage(data) {
+    debug('handle',data);
     this.parser.write(data);
   }
 }
