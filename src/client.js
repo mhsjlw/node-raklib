@@ -123,17 +123,8 @@ class Client extends EventEmitter {
     }
   }
 
-  write(name, params) {
-    if(this.ended)
-      return;
-
-    debug("writing packet " + name);
-    debug(JSON.stringify(params));
-    this.serializer.write({ name, params });
-  }
-
   writeEncapsulated(name, params,options) {
-    options = options || {};
+    options=options||{};
     let  priority=options.priority||4;
     let reliability=options.reliability||3;
     let orderChannel=options.orderChannel||0;
@@ -141,7 +132,8 @@ class Client extends EventEmitter {
 
     let messageIndex;
     let orderIndex;
-    if([2,3,4,6,7].indexOf(reliability)!=-1) {
+    if([2,3,4,6,7].indexOf(reliability)!=-1)
+    {
       messageIndex=this.messageIndex++;
       if(reliability==3)
         orderIndex=this.channelIndex[orderChannel]++;
@@ -149,22 +141,9 @@ class Client extends EventEmitter {
 
     if(buffer.length>this.mtuSize-20) {
       const buffers = split(buffer, this.mtuSize-34);
-    }
 
-    debug('writing packet ' + name);
-    debug(params);
-    this.serializer.write({ name, params });
-  }
-
-  writeEncapsulated(name, params, priority) {
-    priority=priority || 4;
-    const buffer = this.encapsulatedPacketSerializer.createPacketBuffer({ name, params });
-
-    if(buffer.length > this.mtuSize) {
-      const buffers = split(buffer, this.mtuSize);
-
-      buffers.forEach(function(bufferPart, index) {
-        this.write('data_packet_' + priority, {
+      buffers.forEach((bufferPart, index) => {
+        this.write("data_packet_" + priority, {
           seqNumber: this.sendSeqNumber,
           encapsulatedPackets: [{
             reliability: reliability,
@@ -178,10 +157,8 @@ class Client extends EventEmitter {
             buffer: bufferPart
           }]
         });
-
         debug("writing packet " + name);
         debug(JSON.stringify(params));
-
         this.sendSeqNumber++;
         if(index>0) {
           this.messageIndex++;
@@ -191,7 +168,7 @@ class Client extends EventEmitter {
       this.splitId = this.splitId % 65536;
     }
     else {
-      this.write('data_packet_' + priority, {
+      this.write("data_packet_" + priority, {
         seqNumber: this.sendSeqNumber,
         encapsulatedPackets: [{
           reliability: 2,
@@ -200,12 +177,19 @@ class Client extends EventEmitter {
           buffer: buffer
         }]
       });
-
       debug("writing packet " + name);
       debug(JSON.stringify(params));
-
       this.sendSeqNumber++;
     }
+  }
+
+  write(name, params) {
+    if(this.ended)
+      return;
+
+    debug("writing packet " + name);
+    debug(JSON.stringify(params));
+    this.serializer.write({ name, params });
   }
 
   handleMessage(data) {
