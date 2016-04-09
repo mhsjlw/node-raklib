@@ -1,5 +1,5 @@
-raknet
-===========
+raknet [![Build Status](https://img.shields.io/circleci/project/mhsjlw/raknet/master.svg)](https://circleci.com/gh/mhsjlw/raknet)
+======
 
 [![NPM version](https://img.shields.io/npm/v/raknet.svg)](http://npmjs.com/package/raknet)
 [![Join the chat at https://gitter.im/PrismarineJS/node-minecraft-protocol](https://img.shields.io/badge/gitter-join%20chat-brightgreen.svg)](https://gitter.im/PrismarineJS/node-minecraft-protocol)
