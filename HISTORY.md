@@ -1,3 +1,9 @@
+## 1.6.3
+
+* remove unneeded things
+* normalize style
+* added tests
+
 ## 1.6.2
 
 * add login event

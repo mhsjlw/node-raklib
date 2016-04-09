@@ -14,7 +14,7 @@ function writeMagic(value, buffer, offset) {
 }
 
 function readIpAddress(buffer, offset) {
-  var address = (~buffer[offset]&0xff) + '.' + (~buffer[offset+1]&0xff) + '.' + (~buffer[offset+2]&0xff) + '.' + (~buffer[offset+3]&0xff);
+  var address = (~buffer[offset] & 0xff) + '.' + (~buffer[offset + 1] & 0xff) + '.' + (~buffer[offset + 2] & 0xff) + '.' + (~buffer[offset + 3] & 0xff);
   return {
     size: 4,
     value: address
@@ -25,7 +25,7 @@ function writeIpAddress(value, buffer, offset) {
   var address = value.split('.');
 
   address.forEach(function(b) {
-    buffer[offset] = ~(parseInt(b))&0xff;
+    buffer[offset] = ~(parseInt(b)) & 0xff;
     offset++;
   });
 
@@ -34,21 +34,21 @@ function writeIpAddress(value, buffer, offset) {
 
 function writeTriad(value, buffer, offset) {
   buffer[offset] = (value >> 16) & 0xFF;
-  buffer[offset+1] = (value >> 8) & 0xFF; 
-  buffer[offset+2] = value & 0xFF;
+  buffer[offset + 1] = (value >> 8) & 0xFF;
+  buffer[offset + 2] = value & 0xFF;
   return offset + 3;
 }
 
 function readTriad(buffer, offset) {
   return {
     size: 3,
-    value: (buffer[offset] << 16) + (buffer[offset+1] << 8) + buffer[offset+2]
+    value: (buffer[offset] << 16) + (buffer[offset + 1] << 8) + buffer[offset + 2]
   }
 }
 
 function writeLTriad(value, buffer, offset) {
-  buffer[offset+2] = (value >> 16) & 0xFF;
-  buffer[offset+1] = (value >> 8) & 0xFF; 
+  buffer[offset + 2] = (value >> 16) & 0xFF;
+  buffer[offset + 1] = (value >> 8) & 0xFF;
   buffer[offset] = value & 0xFF;
   return offset + 3;
 }
@@ -56,7 +56,7 @@ function writeLTriad(value, buffer, offset) {
 function readLTriad(buffer, offset) {
   return {
     size: 3,
-    value: (buffer[offset+2] << 16) + (buffer[offset+1] << 8) + buffer[offset]
+    value: (buffer[offset + 2] << 16) + (buffer[offset + 1] << 8) + buffer[offset]
   }
 }
 
@@ -78,10 +78,10 @@ function sizeOfRestBuffer(value) {
 
 
 function readEndOfArray(buffer, offset, typeArgs) {
-  var type=typeArgs.type;
+  var type = typeArgs.type;
   var cursor = offset;
   var elements = [];
-  while(cursor<buffer.length) {
+  while(cursor < buffer.length) {
     var results = this.read(buffer, cursor, type, {});
     elements.push(results.value);
     cursor += results.size;
@@ -93,7 +93,7 @@ function readEndOfArray(buffer, offset, typeArgs) {
 }
 
 function writeEndOfArray(value, buffer, offset,typeArgs) {
-  var type=typeArgs.type;
+  var type = typeArgs.type;
   var self = this;
   value.forEach(function(item) {
     offset = self.write(item, buffer, offset, type, {});
@@ -102,7 +102,7 @@ function writeEndOfArray(value, buffer, offset,typeArgs) {
 }
 
 function sizeOfEndOfArray(value, typeArgs) {
-  var type=typeArgs.type;
+  var type = typeArgs.type;
   var size = 0;
   for(var i = 0; i < value.length; ++i) {
     size += this.sizeOf(value[i], type, {});
@@ -113,8 +113,8 @@ function sizeOfEndOfArray(value, typeArgs) {
 function readToByte(buffer,offset,typeArgs) {
   var results = this.read(buffer, offset, typeArgs.type, {});
   return {
-    value:Math.ceil(results.value/8),
-    size:results.size
+    value: Math.ceil(results.value/8),
+    size: results.size
   };
 }
 
@@ -123,7 +123,7 @@ function writeToByte(value, buffer,offset,typeArgs) {
 }
 
 function sizeOfToByte(value, typeArgs) {
-  return this.sizeOf(value<<3, typeArgs.type, {});
+  return this.sizeOf(value << 3, typeArgs.type, {});
 }
 
 module.exports = {
