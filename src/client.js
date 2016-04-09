@@ -160,15 +160,6 @@ class Client extends EventEmitter {
     priority=priority || 4;
     const buffer = this.encapsulatedPacketSerializer.createPacketBuffer({ name, params });
 
-    debug('writing packet ' + name);
-    debug(params);
-    this.serializer.write({ name, params });
-  }
-
-  writeEncapsulated(name, params, priority) {
-    priority=priority || 4;
-    const buffer = this.encapsulatedPacketSerializer.createPacketBuffer({ name, params });
-
     if(buffer.length > this.mtuSize) {
       const buffers = split(buffer, this.mtuSize);
 
