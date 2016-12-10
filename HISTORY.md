@@ -1,3 +1,6 @@
+## 1.8.1
+* add tests
+
 ## 1.8.0
 
 * add writeEncapsulatedRaw
