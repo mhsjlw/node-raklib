@@ -1,16 +1,16 @@
 {
   "name": "raknet",
   "version": "1.8.0",
-  "description": "UDP network library that follows the RakNet protocol for Node.js",
+  "description": "RakNet implementation in JavaScript for Node",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jest"
   },
   "keywords": [
     "raknet",
     "protocol"
   ],
-  "author": "mhsjlw <mhsjlw@aol.com>",
+  "author": "mhsjlw",
   "contributors": [
     "rom1504 <romain.rom1@gmail.com>"
   ],
@@ -31,5 +31,8 @@
   "bugs": {
     "url": "https://github.com/mhsjlw/node-raknet/issues"
   },
-  "homepage": "https://github.com/mhsjlw/node-raknet#readme"
+  "homepage": "https://github.com/mhsjlw/node-raknet#readme",
+  "devDependencies": {
+    "jest": "^21.2.1"
+  }
 }
