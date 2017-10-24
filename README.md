@@ -1,43 +1,40 @@
-raknet
-===========
-
-[![NPM version](https://img.shields.io/npm/v/raknet.svg)](http://npmjs.com/package/raknet)
-[![Join the chat at https://gitter.im/PrismarineJS/node-minecraft-protocol](https://img.shields.io/badge/gitter-join%20chat-brightgreen.svg)](https://gitter.im/PrismarineJS/node-minecraft-protocol)
+RakNet [![NPM version](https://img.shields.io/npm/v/raknet.svg)](http://npmjs.com/package/raknet) [![Join the chat at https://gitter.im/PrismarineJS/node-minecraft-protocol](https://img.shields.io/badge/gitter-join%20chat-brightgreen.svg)](https://gitter.im/PrismarineJS/node-minecraft-protocol)
+======
 
 > Note: This project is not affiliated with Jenkins Software LLC nor RakNet.
 
-UDP network library that follows the RakNet protocol for Node.js
+RakNet implementation in JavaScript for Node
 
 ## API
 
-### createClient(options)
+### `createClient(options)`
 
-Create a client. options :
-* host
-* port
-* password (optional)
-* customPackets (optional)
-* customTypes : native protodef types (optional)
-* clientID : a long representing the client id, default to `[339844,-1917040252]`
-* mtuSize : default to 1492
+Create a client. Options:
+* `host`
+* `port`
+* `password` (optional)
+* `customPackets` (optional)
+* `customTypes`, native protodef types (optional)
+* `clientID`, a long representing the client ID, default to `[339844,-1917040252]`
+* `mtuSize`, default to 1492
 
-### createServer(options)
+### `createServer(options)`
 
-Create a server. options :
-* host
-* port
-* name (optional)
-* customPackets (optional)
-* customTypes : native protodef types (optional)
-* serverID : a long representing the server id, default to `[ 339724, -6627871 ]`
+Create a server. Options:
+* `host`
+* `port`
+* `name` (optional)
+* `customPackets` (optional)
+* `customTypes`, native protodef types (optional)
+* `serverID`, a long representing the server id, default to `[ 339724, -6627871 ]`
 
-### createSerializer()
+### `createSerializer()`
 
-Return a raknet packet serializer, see node-protodef doc.
+Return a RakNet packet serializer, see node-protodef documentation
 
-### createDeserializer()
+### `createDeserializer()`
 
-Return a raknet packet serializer, see node-protodef doc.
+Return a RakNet packet serializer, see node-protodef documentation
 
 ## Thanks
 - [RakLib](https://github.com/PocketMine/RakLib) for some packets to look at
